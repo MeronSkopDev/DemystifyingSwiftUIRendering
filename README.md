@@ -68,7 +68,7 @@ We can see here that we switched the simple `@State` with a `@StateObject` that 
 Will changing `counter` within `ContentViewModel` re render `Content`View``? YES
 So we can see that unlike `@State`, `ObserveableObject` does re render the `View` holding it wether you observe its `@Published` variables or not.
 
-*Side note: In iOS 17 the* `@Observation` *modifier was added, but unlike* `ObservableObject` *It does NOT re render on every change of a* `@Published` *variable within. Instead it works like the* `@State` *wrapper, like we saw in* [The part about `@State`](#the-relationship-between-state-and-re-rendering-a-views-body).
+*Side note: In iOS 17 the* `@Observation` *modifier was added, but unlike* `ObservableObject` *It does NOT re render on every change of a* `@Published` *variable within. Instead it works like the* `@State` *wrapper, like we saw in* [The section about `@State`](#the-relationship-between-state-and-re-rendering-a-views-body).
 ## A little SwiftUI under the hood
 So how does SwiftUI know how to re render `View`s, and what `View`s should be replaced with new ones?
 It basically follows these steps:
