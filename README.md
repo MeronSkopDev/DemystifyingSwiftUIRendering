@@ -4,18 +4,18 @@ We already know that if we want to have a mutable variable inside of a `View` we
 ```Swift
 import SwiftUI  
 struct ContentView: View {  
-	@State private var counter: Int = 0 
-	var body: some View {  
-		VStack {  
-			Text("Counter: \(counter)")  
-			Button {  
-				counter += 1  
-			} label: {  
-				Text("Counter +1")  
-			}  
-		}  
-		.padding()    
-	}
+    @State private var counter: Int = 0 
+    var body: some View {  
+        VStack {  
+            Text("Counter: \(counter)")  
+            Button {  
+                counter += 1  
+            } label: {  
+                Text("Counter +1")  
+            }  
+        }  
+            .padding()    
+    }
 }
 ```
 Here we have a simple `View` that has a state, a text and a button. The interesting question here is wether changing the `counter` state re renders our `View`. In this case it must, because if it didn't then we won't see the text `Text("Counter: \(counter)")` change whenever the `counter` changes.
@@ -24,18 +24,17 @@ But a more interesting question is if the code below re renders when the counter
 ```Swift
 import SwiftUI  
 struct ContentView: View {  
-	@State private var counter: Int = 0 
-	var body: some View {  
-		VStack {  
-			//Text("Counter: \(counter)")  
-			Button {  
-				counter += 1  
-			} label: {  
-				Text("Counter +1")  
-			}  
-		}  
-		.padding()  
-	}
+    @State private var counter: Int = 0 
+    var body: some View {  
+        VStack {  
+            //Text("Counter: \(counter)")  
+            Button {  
+                counter += 1  
+            } label: {  
+                Text("Counter +1")  
+            }  
+        }  
+            .padding()  
 }
 ```
 As you can see we just commented `Text("Counter: \(counter)")` out, meaning that we have a state in `counter` and we change it when the button is tapped, but no one is observing its changes. 
@@ -46,22 +45,21 @@ So we have seen what happens with the relationship between `@State` and re rende
 import SwiftUI  
 
 class ContentViewModel: ObservableObject {
-	@Published var counter: Int = 0
+    @Published var counter: Int = 0
 }
 
 struct ContentView: View {  
-	@StateObject private var ViewModel: ContentViewModel = ContentViewModel()
-	var body: some View {  
-		VStack {  
-			Button {  
-				ViewModel.counter += 1  
-			} label: {  
-				Text("Counter +1")  
-			}  
-		}  
-		.padding()  
-		}  
-	}
+    @StateObject private var ViewModel: ContentViewModel = ContentViewModel()
+    var body: some View {  
+        VStack {  
+            Button {  
+                ViewModel.counter += 1  
+            } label: {  
+                Text("Counter +1")  
+            }  
+        }  
+            .padding()  
+    }
 }
 ```
 We can see here that we switched the simple `@State` with a `@StateObject` that holds a `@Published` variable within it, but we can also see that no one observes the `@Published` counter.
@@ -84,13 +82,12 @@ Remember that every body of every `View` holds more `View`s inside it, making th
 Since we know that the body of the `View` will be called every time it needs to re render, that means it will run all the actions in that body every time as well. Also sometimes the body is called multiple times in the layout phase, and if you have a lot of complicated actions in the body they will all get called multiple times when the `View` boots up initially.
 ```Swift
 var body: some View {  
-	List {  
-		ForEach(model.values.filter { $0 > 0 }, id: \.self) {  
-			Text(String($0))  
-			.padding()  
-			}  
-		}  
-	}
+    List {  
+        ForEach(model.values.filter { $0 > 0 }, id: \.self) {  
+            Text(String($0))  
+                .padding()  
+        }  
+    }
 }
 ```
 For example `ForEach(model.values.filter { $0 > 0 }, id: \.self) {}` is very bad since this filter will run every time the body is re rendered. 
@@ -98,14 +95,14 @@ For example `ForEach(model.values.filter { $0 > 0 }, id: \.self) {}` is very bad
 #### Rule 2: Avoid conditional `View`s
 ```Swift
 var body: some View {  
-	VStack {  
-		if isHighlighted {  
-			CustomView()  
-				.opacity(0.8)  
-		} else {  
-			CustomView()  
-		}
-	} 
+    VStack {  
+        if isHighlighted {  
+            CustomView()  
+                .opacity(0.8)  
+            } else {  
+                CustomView()  
+            }
+    } 
 }
 ```
 In this case although we have the `if` statement that means only one case is rendered, SwiftUI keeps a hierarchy tree for **both** cases. This means that if `CustomView` has some complicated `View` hierarchy and conditional statements within it then SwiftUI will build a tree for it in the background.
@@ -117,10 +114,10 @@ Notice that we have `ModifiedContent<Custom`View`, _OpacityEffect>` and `CustomV
 
 ```Swift
 var body: some View {  
-	VStack {  
-		CustomView()  
-			.opacity(isHighlighted ? 0.8 : 1.0)
-	} 
+    VStack {  
+        CustomView()  
+            .opacity(isHighlighted ? 0.8 : 1.0)
+    } 
 }
 ```
 This basically solves cases like this.
@@ -237,12 +234,12 @@ As we can see here the `_isPOD` function tells us which data types are POD and w
 One more little thing. Look at this
 ```Swift
 struct EmptyView: View {
-	var body: some View {
-		Text("Text")
-		.onAppear {
-			print(_isPOD(EmptyView.self)) // true
-		}
-	}
+    var body: some View {
+        Text("Text")
+            .onAppear {
+                print(_isPOD(EmptyView.self)) // true
+            }
+    }
 }
 ```
 We can see here that ``View`` is a POD, cool right? well we will se why this is super cool in a second.
@@ -256,64 +253,118 @@ Our main takeaway here should be this:
 - All POD types use **memcmp**, unless they conform to `Equatable`, then they will use **equality**
 - All NON-POD types use **reflection** (Yuckie) unless they conform to `Equatable`, then they will use **equality** (Dope as hell)
 So this is all cool and everything but what can we do with this? This gives us a really powerful thing in SwiftUI. Given that a `View` uses **memcpy** or **equality** we can ensure it will not re render when we don't want it to. And it also makes comparing `View`s in case they do need to change much much faster.
-Lets put this all together now.
+## Lets put this all together now
 ```Swift
-import SwiftUI  
-
 struct ContentView: View {  
-	@State var topCounter: Int = 0
-	@State var midCounter: Int = 0
-	@State var bottomCounter: Int = 0
-	var body: some View {  
-		VStack {  
-			ButtonWithCounter(counter: topCounter){ 
-				topCounter += 1
-			}
+    @State var topCounter: Int = 0
+    @State var midCounter: Int = 0
+    @State var bottomCounter: Int = 0
+    var body: some View {  
+        VStack {  
+            ButtonWithCounter(counter: topCounter){ 
+                topCounter += 1
+            }
 			
-			ButtonWithCounter(counter: midCounter){ 
-				midCounter += 1
-			}
+            ButtonWithCounter(counter: midCounter){ 
+                midCounter += 1
+            }
 			
-			ButtonWithCounter(counter: bottomCounter){ 
-				bottomCounter += 1
-			}
+            ButtonWithCounter(counter: bottomCounter){ 
+                bottomCounter += 1
+            }
 			
-			NumberView(number: topCounter)
-		}  
-		.padding()  
-	}
+            NumberView(number: topCounter)
+            }  
+            .padding()  
+    }
 }
 
 private struct ButtonWithCounter: View, Equatable {
-	let counter: Int
-	// This requiers we conform to equatable because its not POD
-	let action: () -> Void 
+    let counter: Int
+    // This requiers we conform to equatable because its not POD
+    let action: () -> Void 
 	
-	var body: some View {
-		Button {  
-			action()
-		} label: {  
-			Text("Counter: \(counter)")  
-		}
-	}
+    var body: some View {
+        Button {  
+            action()
+        } label: {  
+            Text("Counter: \(counter)")  
+        }
+    }
 	
-	static func == (lhs: ButtonWithCounter, rhs: ButtonWithCounter) -> Bool {
-			lhs.counter == rhs.counter
-	}
+    static func == (lhs: ButtonWithCounter, rhs: ButtonWithCounter) -> Bool {
+        lhs.counter == rhs.counter
+    }
 }
 
 // Already POD so it does not need to conform to Equatable
 private struct NumberView: View {
-	let number: Int
+    let number: Int
 	
-	var body: some View {
-		Text("\(number)")
-	}
+    var body: some View {
+        Text("\(number)")
+    }
 }
 ```
 What we have here is very cool now.
 - `private struct ButtonWithCounter: View, Equatable {}`: This struct contains `let action: () -> Void ` which is not POD, meaning that conforming to `Equatable` saves us from **reflection** comparison. This in turn means that this `View` will NOT re render unless the state that it observes changes.
 - `private struct NumberView: View {}`: This struct is POD because it only has an `Int` inside of it (which is also POD). This means that this `View` will use **memcmp** to compare, which in return means that this `View` will NOT re render unless the state that it observes changes.
+### Using `@Binidng` to improve it further
+If we wrap the variable that we change in `@Binding` it will make it so that the parent view holding the state will avoid re rendering.
+```Swift
+import SwiftUI  
+
+struct ContentView: View {  
+    @State var topCounter: Int = 0
+    @State var midCounter: Int = 0
+    @State var bottomCounter: Int = 0
+    var body: some View {  
+        VStack {  
+            ButtonWithCounter(counter: topCounter){ 
+                topCounter += 1
+            }
+			
+            ButtonWithCounter(counter: midCounter){ 
+                midCounter += 1
+            }
+			
+            ButtonWithCounter(counter: bottomCounter){ 
+                bottomCounter += 1
+            }
+			
+            NumberView(number: topCounter)
+        }  
+        .padding()  
+    }
+}
+
+private struct ButtonWithCounter: View, Equatable {
+    let counter: Int
+    // This requiers we conform to equatable because its not POD
+    let action: () -> Void 
+	
+    var body: some View {
+        Button {  
+            action()
+        } label: {  
+            Text("Counter: \(counter)")  
+        }
+    }
+	
+    static func == (lhs: ButtonWithCounter, rhs: ButtonWithCounter) -> Bool {
+        lhs.counter == rhs.counter
+    }
+}
+
+private struct NumberView: View {
+    @Binding var number: Int // LOOK HERE!!!
+	
+    var body: some View {
+        Text("\(number)")
+    }
+}
+```
+- `@Binding var number: Int`: Adding the `@Binding` wrapper here will make it so that `ContentView` does not re render whenever the associated state changes.
 
 ***
 ### Resources:
