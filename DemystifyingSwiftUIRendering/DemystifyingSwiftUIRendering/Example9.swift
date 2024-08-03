@@ -53,7 +53,6 @@ struct Example9: View {
                 acton()
             }
         }
-        
     }
     
     private struct CounterView: View {

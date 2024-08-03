@@ -20,6 +20,7 @@
 		91041A772C52E210007D7FA5 /* Example8.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91041A762C52E210007D7FA5 /* Example8.swift */; };
 		91041A792C52E7C2007D7FA5 /* Example9.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91041A782C52E7C2007D7FA5 /* Example9.swift */; };
 		91041A7B2C52E973007D7FA5 /* Example9Solution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91041A7A2C52E973007D7FA5 /* Example9Solution.swift */; };
+		C642C3062C5E12E900F83BAB /* Example10.swift in Sources */ = {isa = PBXBuildFile; fileRef = C642C3052C5E12E900F83BAB /* Example10.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		91041A762C52E210007D7FA5 /* Example8.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example8.swift; sourceTree = "<group>"; };
 		91041A782C52E7C2007D7FA5 /* Example9.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example9.swift; sourceTree = "<group>"; };
 		91041A7A2C52E973007D7FA5 /* Example9Solution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example9Solution.swift; sourceTree = "<group>"; };
+		C642C3052C5E12E900F83BAB /* Example10.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example10.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +83,7 @@
 				91041A762C52E210007D7FA5 /* Example8.swift */,
 				91041A782C52E7C2007D7FA5 /* Example9.swift */,
 				91041A7A2C52E973007D7FA5 /* Example9Solution.swift */,
+				C642C3052C5E12E900F83BAB /* Example10.swift */,
 				91041A5F2C52D375007D7FA5 /* Assets.xcassets */,
 				91041A612C52D375007D7FA5 /* DemystifyingSwiftUIRendering.entitlements */,
 				91041A622C52D375007D7FA5 /* Preview Content */,
@@ -173,6 +176,7 @@
 				91041A6B2C52D469007D7FA5 /* Example2.swift in Sources */,
 				91041A6F2C52D9FD007D7FA5 /* Example4.swift in Sources */,
 				91041A732C52E009007D7FA5 /* Example6.swift in Sources */,
+				C642C3062C5E12E900F83BAB /* Example10.swift in Sources */,
 				91041A712C52DC0A007D7FA5 /* Example5.swift in Sources */,
 				91041A772C52E210007D7FA5 /* Example8.swift in Sources */,
 				91041A792C52E7C2007D7FA5 /* Example9.swift in Sources */,

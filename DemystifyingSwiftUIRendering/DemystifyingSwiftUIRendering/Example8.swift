@@ -61,7 +61,7 @@ struct Example8: View {
     
     // TODO: Lets talk about memcmp, Equatable and Reflection
         /// This explains `Example6` and `Example7` isn't that sick?
-        /// This also comes together with the explanation in 
+        /// This also comes together with the explanation of how SwiftUI compares the view's data.
     // TODO: Close the console before the next example -> Example9
 }
 
