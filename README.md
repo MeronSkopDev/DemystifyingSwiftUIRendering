@@ -66,11 +66,11 @@ We can see here that we switched the simple `@State` with a `@StateObject` that 
 Will changing `counter` within `ContentViewModel` re render `Content`View``? YES
 So we can see that unlike `@State`, `ObserveableObject` does re render the `View` holding it wether you observe its `@Published` variables or not.
 
-*Side note: In iOS 17 the* `@Observation` *modifier was added, but unlike* `ObservableObject` *It does NOT re render on every change of a* `@Published` *variable within. Instead it works like the* `@State` *wrapper, like we saw in* [The section about `@State`](#the-relationship-between-state-and-re-rendering-a-views-body).
+*Side note: In iOS 17 the* `@Observation` *modifier was added, but unlike* `ObservableObject` *It does NOT re render on every change of a* `@Published` *variable within. Instead it works like the* `@State` *wrapper, like we saw in* [the section about `@State`](#the-relationship-between-state-and-re-rendering-a-views-body).
 ## A little SwiftUI under the hood
 So how does SwiftUI know how to re render `View`s, and what `View`s should be replaced with new ones?
 It basically follows these steps:
-1. SwiftUI receives a change it the state that requires a re render (Like we saw in [The section about `@State`](#the-relationship-between-state-and-re-rendering-a-views-body) or [The section about `ObservableObject`](#the-relationship-between-observableobject-and-re-rendering-a-views-body)).
+1. SwiftUI receives a change it the state that requires a re render (Like we saw in [the section about `@State`](#the-relationship-between-state-and-re-rendering-a-views-body) or [The section about `ObservableObject`](#the-relationship-between-observableobject-and-re-rendering-a-views-body)).
 2. SwiftUI creates some data for the **state** of the new possible `View`s that might be created.
 	- This data is an amalgamation of the state of the `View`, meaning the variables within it, wether they have property wrapper like `@State` or not. This means that if a `View` has an `Int` or a `[String]` within it, they will be included in that data that is created for comparison.
 3. SwiftUI checks wether the **state** of `View`s that are already in the hierarchy is **equal** to the ones it wants to add.
@@ -365,6 +365,7 @@ private struct NumberView: View {
 }
 ```
 - `@Binding var number: Int`: Adding the `@Binding` wrapper here will make it so that `ContentView` does not re render whenever the associated state changes.
+The reason this works is because by wrapping `number` with the `@Binding` wrapper SwiftUI now sees it as a state that is shared by `ContentView` and `NumberView`, and the only `View` thats observing it is `NumberView`. This means that when `number` changes its sees it as a change of a in `NumberView`'s state and not `ContentView`, that means that `ContentView` will not re render (Basically what we saw in [the section about `@State`](#the-relationship-between-state-and-re-rendering-a-views-body)).
 
 ***
 ### Resources:
