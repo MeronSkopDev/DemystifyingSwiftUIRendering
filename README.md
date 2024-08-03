@@ -365,6 +365,7 @@ private struct NumberView: View {
 }
 ```
 - `@Binding var number: Int`: Adding the `@Binding` wrapper here will make it so that `ContentView` does not re render whenever the associated state changes.
+
 The reason this works is because by wrapping `number` with the `@Binding` wrapper SwiftUI now sees it as a state that is shared by `ContentView` and `NumberView`, and the only `View` thats observing it is `NumberView`. This means that when `number` changes its sees it as a change of a in `NumberView`'s state and not `ContentView`, that means that `ContentView` will not re render (Basically what we saw in [the section about `@State`](#the-relationship-between-state-and-re-rendering-a-views-body)).
 
 ***
